@@ -19,7 +19,7 @@ class Login:
         left_lbl=Label(self.root,bg="black",bd=0)
         left_lbl.place(x=0,y=0,relheight=1,width=600)
         
-        self.theme=ImageTk.PhotoImage(file="E:/login_database/images/theme.jpg")
+        self.theme=ImageTk.PhotoImage(file="E:/Thesis/login_database/images/theme.jpg")
         right_lbl=Label(self.root,image=self.theme,bg="black")
         right_lbl.place(x=610,y=0)
 
@@ -54,7 +54,7 @@ class Login:
         draw=ImageDraw.Draw(clock)
 
         # Create clock image
-        bg=Image.open("E:/login_database/images/clock_background.jpg")
+        bg=Image.open("E:/Thesis/login_database/images/clock_background.jpg")
         bg=bg.resize((350,350),Image.ANTIALIAS)
         clock.paste(bg,(20,35))
 
@@ -76,7 +76,7 @@ class Login:
         draw.line((origin,200+65*sin(radians(sec_)),190-100*cos(radians(sec_))),fill="white",width=2)
         # Create the center point of clock
         draw.ellipse((195,187,205,200),fill="lightgreen")
-        clock.save("E:/login_database/images/clock_new.jpg")
+        clock.save("E:/Thesis/login_database/images/clock_new.jpg")
     
     # Function to create function of clock
     def working(self):
@@ -89,7 +89,7 @@ class Login:
         sec_=(s/60)*360
 
         self.clock_image(hr,min_,sec_)
-        self.img=ImageTk.PhotoImage(file="E:/login_database/images/clock_new.jpg")
+        self.img=ImageTk.PhotoImage(file="E:/Thesis/login_database/images/clock_new.jpg")
         self.lbl.config(image=self.img)
         # time delay of 1000 milliseconds
         self.lbl.after(200,self.working)

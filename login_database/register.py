@@ -14,7 +14,7 @@ class Register:
         self.root.geometry("1350x700+0+0")
         self.root.config(bg="black")
         # Define image
-        self.bg=Image.open("E:/login_database/images/background.jpg")
+        self.bg=Image.open("E:/Thesis/login_database/images/background.jpg")
         self.bg=self.bg.resize((970,700),Image.ANTIALIAS)
         # Add image inside root
         self.bg_resized=ImageTk.PhotoImage(self.bg)
@@ -27,7 +27,7 @@ class Register:
         #my_canvas.create_image(0, 0, image=bg, anchor="nw")
         
         # Left image
-        self.left=Image.open("E:/login_database/images/login.jpg")
+        self.left=Image.open("E:/Thesis/login_database/images/login.jpg")
         self.left=self.left.resize((400,496),Image.ANTIALIAS)
         self.left_resized=ImageTk.PhotoImage(self.left)
         left_resized=Label(self.root,image=self.left_resized,bg="black").place(x=80,y=100)
@@ -83,7 +83,7 @@ class Register:
         chk=Checkbutton(frame1,text="I Agree The Terms & Conditions",variable=self.var_chk,onvalue=1,offvalue=0,bg="white",font=("times time roman",10,"italic","bold")).place(x=50,y=380)
         
         # Button register
-        self.btn_img=Image.open("E:/login_database/images/register.jpg")
+        self.btn_img=Image.open("E:/Thesis/login_database/images/register.jpg")
         self.btn_img=self.btn_img.resize((250,50), Image.ANTIALIAS)
         self.btn=ImageTk.PhotoImage(self.btn_img)
         btn_register=Button(frame1,image=self.btn,bd=0,cursor="hand2",command=self.register_data).place(x=50,y=420)
