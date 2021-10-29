@@ -151,12 +151,12 @@ class Student:
             cur=con.cursor()
             cur.execute("insert into students (No,Name,Email,Gender,Contact,DOB,Address) values(%s,%s,%s,%s,%s,%s,%s)",
                         (self.roll_no_var.get(),
-                        self.name_var.get(),
-                        self.email_var.get(),
-                        self.gender_var.get(),
-                        self.contact_var.get(),
-                        self.dob_var.get(),
-                        self.txt_address.get('1.0',END) # ???
+                         self.name_var.get(),
+                         self.email_var.get(),
+                         self.gender_var.get(),
+                         self.contact_var.get(),
+                         self.dob_var.get(),
+                         self.txt_address.get('1.0',END) # ???
                         ))
             con.commit()
             self.fetch_data()
