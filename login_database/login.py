@@ -194,7 +194,8 @@ class Login:
                 else:
                     messagebox.showinfo("Success","Wellcome",parent=self.root)
                     self.root.destroy() 
-                    # import file database management 
+                    # import file database management
+                    import student
                 con.close()
             except Exception as es:
                 messagebox.showerror("Error",f"Error due to: {str(es)}",parent=self.root)
