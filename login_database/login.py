@@ -47,7 +47,9 @@ class Login:
         #-----------Clock Frame-------------
         self.lbl=Label(self.root,bg="black",bd=0)
         self.lbl.place(x=90,y=120,height=450,width=350)
-        self.working()
+
+        #-----Function workings--------
+        self.clock_working()
         self.digital_clock()
 
     # Function to create clock frame
@@ -81,7 +83,7 @@ class Login:
         clock.save("E:/Thesis/login_database/images/clock_new.jpg")
     
     # Function to create function of clock
-    def working(self):
+    def clock_working(self):
         h=datetime.now().time().hour  
         m=datetime.now().time().minute  
         s=datetime.now().time().second 
@@ -94,7 +96,7 @@ class Login:
         self.img=ImageTk.PhotoImage(file="E:/Thesis/login_database/images/clock_new.jpg")
         self.lbl.config(image=self.img)
         # time delay of 1000 milliseconds
-        self.lbl.after(200,self.working)
+        self.lbl.after(200,self.clock_working)
 
     # Create digital clock
     def digital_clock(self):   
@@ -206,4 +208,5 @@ class Login:
 
 root=Tk()
 obj=Login(root)
+root.bind("<Configure>", Login)
 root.mainloop()
