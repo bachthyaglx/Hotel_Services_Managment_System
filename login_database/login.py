@@ -29,13 +29,15 @@ class Login:
 
         title=Label(login_frame,text="LOGIN HERE",font=("times new roman",30,"bold"),bg="black",fg="#08A3D2").place(x=250,y=50)
         
+        self.email_var=StringVar()
         email=Label(login_frame,text="EMAIL ADDRESS",font=("times new roman",18,"bold"),bg="black",fg="lightgray").place(x=250,y=150)
-        self.txt_email=Entry(login_frame,font=("times new roman",15),bg="lightgray")
-        self.txt_email.place(x=250,y=180,width=290,height=35)
+        txt_email=Entry(login_frame,textvariable=self.email_var,font=("times new roman",15),bg="lightgray")
+        txt_email.place(x=250,y=180,width=290,height=35)
 
+        self.pass_var=StringVar()
         pass_=Label(login_frame,text="PASSWORD",font=("times new roman",18,"bold"),bg="black",fg="lightgray").place(x=250,y=250)
-        self.txt_pass_=Entry(login_frame,font=("times new roman",15),bg="lightgray")
-        self.txt_pass_.place(x=250,y=280,width=290,height=35)
+        txt_pass_=Entry(login_frame,textvariable=self.pass_var,font=("times new roman",15),bg="lightgray")
+        txt_pass_.place(x=250,y=280,width=290,height=35)
 
         # Create button register, login, forget password
         btn_reg=Button(login_frame,text="Register new account?",command=self.register_window,font=("times new roman",13),bg="black",bd=0,fg="#B00857",cursor="hand2").place(x=250,y=320)
@@ -154,7 +156,8 @@ class Login:
                 # Store the terminal output to a variable 
                 row=cur.fetchone()
                 if row==None:
-                    messagebox.showerror("Error","Invalid email. Please register new account!",parent=self.root)
+                    messagebox.showerror("Error","Invalid email. Please try again or register new account!",parent=self.root)
+                    self.reset()
                 else:
                     cur.execute("update employee set question=%s,answer=%s,password=%s where email=%s",
                                 (self.var_cmb_quest.get(),
@@ -166,37 +169,38 @@ class Login:
                     con.close()
                     messagebox.showinfo("Confirmation","Changed password successfully",parent=self.root)
                     self.root1.destroy()
-                    self.reset()
             except Exception as es:
                 messagebox.showerror("Error",f"Error due to: {str(es)}",parent=self.root)
     
     # Function to reset boxes
     def reset(self):
-        self.var_cmb_quest.current(0)
+        self.var_cmb_quest.set("Select")
         self.txt_new_pass.delete(0,END)
         self.txt_answer.delete(0,END)
-        self.txt_pass_.delete(0,END)
-        self.txt_email.delete(0,END)   
+        self.pass_var.set("")
+        self.email_var.set("")   
+        self.txt_email.delete(0,END)
         
     # Create login with database
     def login(self):
-        if self.txt_email.get()=="" or self.txt_pass_.get()=="":
+        if self.email_var.get()=="" or self.pass_var.get()=="":
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
             try:
                 con=pymysql.connect(host="localhost",user="root",password="",database="employee")
                 cur=con.cursor()
-                cur.execute("select * from employee where email=%s and password=%s",(self.txt_email.get(),self.txt_pass_.get()))
+                cur.execute("select * from employee where email=%s and password=%s",(self.email_var.get(),self.pass_var.get()))
                 # Store the terminal output to a variable 
                 row=cur.fetchone()
                 if row==None:
-                    messagebox.showerror("Error","Invalid USERNAME or PASSWORD",parent=self.root)
+                    messagebox.showerror("Error","Invalid USERNAME or PASSWORD. Try again!",parent=self.root)
+                    self.reset()
                 else:
                     messagebox.showinfo("Success","Wellcome",parent=self.root)
-                    self.root.destroy() 
+                    con.close()
+                    self.root.destroy()
                     # import file database management
                     import student
-                con.close()
             except Exception as es:
                 messagebox.showerror("Error",f"Error due to: {str(es)}",parent=self.root)
 
