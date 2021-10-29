@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import font
 import pymysql
+from tkinter import messagebox
 
 class Student:
     def __init__(self,root):
@@ -22,57 +23,67 @@ class Student:
         self.contact_var=StringVar()
         self.dob_var=StringVar()
 
+        self.search_by=StringVar()
+        self.search_txt=StringVar()
+
         #-------Manage Frame-----------#
         Manage_Frame=Frame(self.root,bd=4,relief=RIDGE,bg="#002d58")
         Manage_Frame.place(x=20,y=100,width=475,height=560)
 
         m_title=title=Label(Manage_Frame,text="Human Management",bg="#002d58",fg="white",font=("times new roman",20,"bold"))
-        m_title.grid(row=0,columnspan=2,pady=20) #Columnspan ??
+        m_title.grid(row=0,columnspan=3,pady=10) #Columnspan ??
+        m_title.config(width=20)
 
         lbl_roll=title=Label(Manage_Frame,text="Roll No.",bg="#002d58",fg="white",font=("times new roman",20,"bold"))
         lbl_roll.grid(row=1,column=0,pady=10,padx=20,sticky="w") #sticky ??
 
-        txt_roll=title=Entry(Manage_Frame,textvariable=self.roll_no_var,font=("times new roman",15,"bold"),bd=5,relief=GROOVE)
+        txt_roll=title=Entry(Manage_Frame,textvariable=self.roll_no_var,font=("times new roman",15),bd=5,relief=GROOVE)
         txt_roll.grid(row=1,column=1,pady=10,padx=20,sticky="w") #sticky ??
-
+        txt_roll.config(width=27)
+        
         lbl_name=title=Label(Manage_Frame,text="Name",bg="#002d58",fg="white",font=("times new roman",20,"bold"))
         lbl_name.grid(row=2,column=0,pady=10,padx=20,sticky="w") #sticky ??
 
-        txt_name=title=Entry(Manage_Frame,textvariable=self.name_var,font=("times new roman",15,"bold"),bd=5,relief=GROOVE)
+        txt_name=title=Entry(Manage_Frame,textvariable=self.name_var,font=("times new roman",15),bd=5,relief=GROOVE)
         txt_name.grid(row=2,column=1,pady=10,padx=20,sticky="w") #sticky ??
+        txt_name.config(width=27)
 
         lbl_email=title=Label(Manage_Frame,text="Email",bg="#002d58",fg="white",font=("times new roman",20,"bold"))
         lbl_email.grid(row=3,column=0,pady=10,padx=20,sticky="w") #sticky ??
 
-        txt_email=title=Entry(Manage_Frame,textvariable=self.email_var,font=("times new roman",15,"bold"),bd=5,relief=GROOVE)
+        txt_email=title=Entry(Manage_Frame,textvariable=self.email_var,font=("times new roman",15),bd=5,relief=GROOVE)
         txt_email.grid(row=3,column=1,pady=10,padx=20,sticky="w") #sticky ??
+        txt_email.config(width=27)
 
         lbl_email=title=Label(Manage_Frame,text="Gender",bg="#002d58",fg="white",font=("times new roman",20,"bold"))
         lbl_email.grid(row=4,column=0,pady=10,padx=20,sticky="w") #sticky ??
 
-        combo_gender=ttk.Combobox(Manage_Frame,textvariable=self.gender_var,font=("times new roman",15,"bold"))
+        combo_gender=ttk.Combobox(Manage_Frame,textvariable=self.gender_var,font=("times new roman",15))
         combo_gender['values']=("Select","Male","Female","Other")
-        combo_gender.place(width=80,height=30,x=165,y=262)
+        combo_gender.place(width=100,height=30,x=165,y=241)
         combo_gender.current(0)
 
         lbl_contact=title=Label(Manage_Frame,text="Contact",bg="#002d58",fg="white",font=("times new roman",20,"bold"))
         lbl_contact.grid(row=5,column=0,pady=10,padx=20,sticky="w") #sticky ??
 
-        txt_contact=title=Entry(Manage_Frame,textvariable=self.contact_var,font=("times new roman",15,"bold"),bd=5,relief=GROOVE)
+        txt_contact=title=Entry(Manage_Frame,textvariable=self.contact_var,font=("times new roman",15),bd=5,relief=GROOVE)
         txt_contact.grid(row=5,column=1,pady=10,padx=20,sticky="w") #sticky ??
+        txt_contact.config(width=27)
 
         lbl_dob=title=Label(Manage_Frame,text="D.O.B",bg="#002d58",fg="white",font=("times new roman",20,"bold"))
         lbl_dob.grid(row=6,column=0,pady=10,padx=20,sticky="w") #sticky ??
 
-        txt_dob=title=Entry(Manage_Frame,textvariable=self.dob_var,font=("times new roman",15,"bold"),bd=5,relief=GROOVE)
+        txt_dob=title=Entry(Manage_Frame,textvariable=self.dob_var,font=("times new roman",15),bd=5,relief=GROOVE)
         txt_dob.grid(row=6,column=1,pady=10,padx=20,sticky="w") #sticky ??
+        txt_dob.config(width=27)
 
         lbl_address=title=Label(Manage_Frame,text="Address",bg="#002d58",fg="white",font=("times new roman",20,"bold"))
         lbl_address.grid(row=7,column=0,pady=10,padx=20,sticky="w") #sticky ??
 
-        self.txt_address=title=Text(Manage_Frame,font=("times new roman",10,"bold"),width=30,height=4,relief=GROOVE)
+        self.txt_address=title=Text(Manage_Frame,font=("times new roman",15),width=21,height=2.5,relief=GROOVE)
         self.txt_address.grid(row=7,column=1,pady=10,padx=20,sticky="w") #sticky ??
-        
+        self.txt_address.config(width=28)
+
         #------Button Frame------
         btn_Frame=Frame(Manage_Frame,bd=3,relief=RIDGE,bg="white")
         btn_Frame.place(x=10,y=505,width=445,height=40)
@@ -86,22 +97,22 @@ class Student:
         Detail_Frame=Frame(self.root,bd=4,relief=RIDGE,bg="#002d58")
         Detail_Frame.place(x=500,y=100,width=800,height=560)
 
-        lbl_search=Label(Detail_Frame,text="Search by",bg="#002d58",fg="white",font=("times new roman",20,"bold"))
+        lbl_search=Label(Detail_Frame,text="Search by",bg="#002d58",fg="white",font=("times new roman",18,"bold"))
         lbl_search.grid(row=0,column=0,pady=10,padx=20,sticky="w") #sticky ??
 
-        combo_search=ttk.Combobox(Detail_Frame,width=10,font=("times new roman",15,"bold"),state="readonly")
-        combo_search['values']=("Roll","Name","Contact")
+        combo_search=ttk.Combobox(Detail_Frame,textvariable=self.search_by,width=10,font=("times new roman",15,"bold"),state="readonly")
+        combo_search['values']=("No","Name","Contact")
         combo_search.grid(row=0,column=1,padx=20,pady=10)
         
-        txt_search=title=Entry(Detail_Frame,width=20,font=("times new roman",10,"bold"),bd=5,relief=GROOVE)
+        txt_search=title=Entry(Detail_Frame,textvariable=self.search_txt,width=20,font=("times new roman",10,"bold"),bd=5,relief=GROOVE)
         txt_search.grid(row=0,column=2,pady=10,padx=20,sticky="w") #sticky ??
 
-        searchbtn=Button(Detail_Frame,text="Search",width=10,pady=5).grid(row=0,column=3,padx=10,pady=10)
-        showallbtn=Button(Detail_Frame,text="Show All",width=10,pady=5).grid(row=0,column=4,padx=10,pady=10) 
+        searchbtn=Button(Detail_Frame,command=self.search_data,text="Search",width=10,pady=5).grid(row=0,column=3,padx=10,pady=10)
+        showallbtn=Button(Detail_Frame,command=self.fetch_data,text="Show All",width=10,pady=5).grid(row=0,column=4,padx=10,pady=10) 
         
         #-----------Table Frame---------
         Table_Frame=Frame(Detail_Frame,bd=4,relief=RIDGE,bg="#002d58")
-        Table_Frame.place(x=10,y=70,width=760,height=480)
+        Table_Frame.place(x=10,y=55,width=760,height=490)
         
         scroll_x=Scrollbar(Table_Frame,orient=HORIZONTAL) #orient ??
         scroll_y=Scrollbar(Table_Frame,orient=VERTICAL) #orient ??
@@ -133,21 +144,25 @@ class Student:
     
     #-----Fuction adding data to database----
     def add(self):
-        con=pymysql.connect(host="localhost",user="root",password="",database="students")
-        cur=con.cursor()
-        cur.execute("insert into students (No,Name,Email,Gender,Contact,DOB,Address) values(%s,%s,%s,%s,%s,%s,%s)",
-                    (self.roll_no_var.get(),
-                     self.name_var.get(),
-                     self.email_var.get(),
-                     self.gender_var.get(),
-                     self.contact_var.get(),
-                     self.dob_var.get(),
-                     self.txt_address.get('1.0',END) # ???
-                    ))
-        con.commit()
-        self.fetch_data()
-        con.close()
-        self.clear()
+        if self.roll_no_var.get()=="" or self.name_var=="" or self.email_var.get()=="" or self.contact_var=="" or self.gender_var.get()=="" or self.dob_var.get()=="" or self.txt_address=="":
+            messagebox.showerror("Error","All fields are required")
+        else:
+            con=pymysql.connect(host="localhost",user="root",password="",database="students")
+            cur=con.cursor()
+            cur.execute("insert into students (No,Name,Email,Gender,Contact,DOB,Address) values(%s,%s,%s,%s,%s,%s,%s)",
+                        (self.roll_no_var.get(),
+                        self.name_var.get(),
+                        self.email_var.get(),
+                        self.gender_var.get(),
+                        self.contact_var.get(),
+                        self.dob_var.get(),
+                        self.txt_address.get('1.0',END) # ???
+                        ))
+            con.commit()
+            self.fetch_data()
+            con.close()
+            self.clear()
+            messagebox.showinfo("Success","Record has been inserted")
 
     #----Function fetching table from database on tkinter----
     def fetch_data(self):
@@ -218,6 +233,21 @@ class Student:
         con.close()
         self.fetch_data()
         self.clear()
+
+    #----Function searching data from database on tkinter----
+    def search_data(self):
+        con=pymysql.connect(host="localhost",user="root",password="",database="students")
+        cur=con.cursor()
+        cur.execute("select * from students where "+str(self.search_by.get())+" Like '%"+str(self.search_txt.get())+"%'")
+        rows=cur.fetchall()
+        if len(rows)!=0:
+            #----- ??? -----
+            self.student_table.delete(*self.student_table.get_children())
+            for i in rows:
+                #---- ???
+                self.student_table.insert('',END,values=i)
+                con.commit()
+        con.close()    
 
 root=Tk()
 obj=Student(root)
