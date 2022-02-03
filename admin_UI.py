@@ -44,7 +44,6 @@ class HouseManagementSystem:
         lbl_title=Label(self.root,text="HOUSE MANAGEMENT SYSTEM",font=("times new roman",18,"bold"),bg="black",fg="gold",bd=2,relief=RIDGE)
         lbl_title.place(x=0,y=100,width=960,height=30)
 
-
         #-------------------Main Frame-------------------#
         main_frame=Frame(self.root,bd=1,relief=RIDGE)
         main_frame.place(x=0,y=130,width=960,height=480)
@@ -57,7 +56,7 @@ class HouseManagementSystem:
         #btn_frame=Frame(main_frame,bd=1,relief=RIDGE)
         #btn_frame.place(x=0,y=35,width=180,height=190)
         
-        cust_btn=Button(main_frame,text="CUSTOMER",command=self.customer_list,font=("times new roman",10,"bold"),bg="black",fg="gold",bd=4,cursor="hand2")
+        cust_btn=Button(main_frame,text="USER",command=self.customer_list,font=("times new roman",10,"bold"),bg="black",fg="gold",bd=4,cursor="hand2")
         cust_btn.place(x=0,y=30,width=150)
         
         room_btn=Button(main_frame,text="BOOKING",command=self.customer_order,font=("times new roman",10,"bold"),bg="black",fg="gold",bd=4,cursor="hand2")
@@ -95,29 +94,38 @@ class HouseManagementSystem:
         lblimg5=Label(main_frame,image=self.photoimg5,bd=1,relief=RIDGE)
         lblimg5.place(x=0,y=330,width=150,height=150)
 
+        self.new_window=None
+        
     def customer_list(self):
+        if(self.new_window!=None):
+            self.new_window.destroy()
         self.new_window=Toplevel(self.root)
-        self.new_window.wm_attributes("-topmost", 1)
+        self.new_window.wm_attributes("-topmost",1)
         self.app=Cust_Win(self.new_window)
-    
+        
     def customer_order(self):
+        if(self.new_window!=None):
+            self.new_window.destroy()
         self.new_window=Toplevel(self.root)
         self.new_window.wm_attributes("-topmost", 1)
         self.app=Room_Booking(self.new_window)
         
     def customer_approval(self):
+        if(self.new_window!=None):
+            self.new_window.destroy()        
         self.new_window=Toplevel(self.root)
         self.new_window.wm_attributes("-topmost", 1)
         self.app=Room_Approval(self.new_window)
     
     def apartment_availability(self):
+        if(self.new_window!=None):
+            self.new_window.destroy()        
         self.new_window=Toplevel(self.root)
         self.new_window.wm_attributes("-topmost", 1)
         self.app=Apartment_Availability(self.new_window)
     
     def log_out(self):
         self.root.destroy()
-        
            
 if __name__ == "__main__":
     root=Tk()
