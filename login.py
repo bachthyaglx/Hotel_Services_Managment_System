@@ -8,7 +8,7 @@ from math import *
 from time import strftime
 import pymysql
 from tkinter import messagebox, ttk
-from house import HotelManagementSystem
+from admin_UI import HouseManagementSystem
 from register import User_Register
 
 class Customer_Login:
@@ -229,7 +229,7 @@ class Customer_Login:
                     # import file database management
                     self.new_window=Toplevel(self.root)
                     self.new_window.wm_attributes("-topmost", 1)
-                    self.app=HotelManagementSystem(self.new_window)
+                    self.app=HouseManagementSystem(self.new_window)
             except Exception as es:
                 messagebox.showerror("Error",f"Error due to: {str(es)}",parent=self.root)
                 
