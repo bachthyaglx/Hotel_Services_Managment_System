@@ -1,3 +1,4 @@
+import sqlite3
 from tkinter import *
 from tkinter import font
 from PIL import Image, ImageTk, ImageDraw
@@ -7,6 +8,8 @@ from math import *
 from time import strftime
 import pymysql
 from tkinter import messagebox, ttk
+from house import HotelManagementSystem
+from register import User_Register
 
 class Customer_Login:
     def __init__(self,root):
@@ -48,7 +51,7 @@ class Customer_Login:
 
         self.pass_var=StringVar()
         pass_=Label(login_frame,text="PASSWORD",font=("times new roman",18,"bold"),bg="black",fg="lightgray").place(x=0,y=190)
-        txt_pass_=Entry(login_frame,textvariable=self.pass_var,font=("times new roman",15),bg="lightgray")
+        txt_pass_=Entry(login_frame,textvariable=self.pass_var,show="*",font=("times new roman",15),bg="lightgray")
         txt_pass_.place(x=0,y=230,width=290,height=35)
 
         # Create button register, login, forget password
@@ -124,8 +127,8 @@ class Customer_Login:
     def digital_date(self):   
         #time format --- Date day/month/year \n hour:min:sec 
         self.date_string=strftime('%A %d/%m/%Y') 
-        self.date_lbl=Label(self.root,font=("times new roman",18,"bold"),bg="black",fg="#12ff05")
-        self.date_lbl.place(x=6,y=50,height=30,width=220)
+        self.date_lbl=Label(self.root,font=("times new roman",16,"bold"),bg="black",fg="#12ff05")
+        self.date_lbl.place(x=15,y=50,height=30,width=220)
         self.date_lbl.config(text=self.date_string)
         self.after_date=root.after(1000,self.digital_date)  #----Global root----#
         
@@ -133,8 +136,8 @@ class Customer_Login:
     def register_window(self):
         root.after_cancel(self.after_clock) #----Global root----#
         root.after_cancel(self.after_date)  #----Global root----#
-        root.destroy()
-        import register
+        self.new_window=Toplevel(self.root)
+        self.app=User_Register(self.new_window)
 
     # Switch to forget password mainpage
     def forget(self):
@@ -152,12 +155,12 @@ class Customer_Login:
         self.txt_email=Entry(self.root1,font=("times new roman",15),bg="lightgray")
         self.txt_email.place(x=50,y=100,width=250)
 
-        new_password=Label(self.root1,text="New Password",font=("time new roman",15,"bold"),bg="white").place(x=50,y=150)
-        self.txt_new_password=Entry(self.root1,font=("times new roman",15),bg="lightgray")
+        new_password=Label(self.root1,text="New password",font=("time new roman",15,"bold"),bg="white").place(x=50,y=150)
+        self.txt_new_password=Entry(self.root1,show="*",font=("times new roman",15),bg="lightgray")
         self.txt_new_password.place(x=50,y=180,width=250)
 
-        confirm_new=Label(self.root1,text="Confirm New Password",font=("time new roman",15,"bold"),bg="white").place(x=50,y=230)
-        self.txt_confirm_new_password=Entry(self.root1,font=("times new roman",15),bg="lightgray")
+        confirm_new=Label(self.root1,text="Confirm password",font=("time new roman",15,"bold"),bg="white").place(x=50,y=230)
+        self.txt_confirm_new_password=Entry(self.root1,show="*",font=("times new roman",15),bg="lightgray")
         self.txt_confirm_new_password.place(x=50,y=260,width=250)
 
         btn_change_password=Button(self.root1,command=self.forget_password,text="Reset Password",bg="green",fg="white",font=("Times New Roman",15,"bold")).place(x=100,y=310)
@@ -168,34 +171,38 @@ class Customer_Login:
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
             try:
-                con=pymysql.connect(host="localhost",user="root",password="",database="employee")
+                con=sqlite3.connect("E:\Thesis\house\database\house.db")
                 cur=con.cursor()
-                cur.execute("select * from employee where email=%s",(self.txt_email.get()))
+                cur.execute("SELECT * FROM customer WHERE Email=?",
+                                (self.txt_email.get(),   
+                                )
+                           )
                 # Store the terminal output to a variable 
                 row=cur.fetchone()
-                if row==None:
+                if(row==None):
                     messagebox.showerror("Error","Invalid email. Please try again or register new account!",parent=self.root)
                     self.reset()
                 else:
-                    cur.execute("update employee set question=%s,answer=%s,password=%s where email=%s",
-                                (self.var_cmb_quest.get(),
-                                 self.txt_answer.get(),
-                                 self.txt_new_pass.get(),
-                                 self.txt_email.get()
-                                ))
-                    con.commit()
-                    con.close()
-                    messagebox.showinfo("Confirmation","Changed password successfully",parent=self.root)
-                    self.root.destroy()
+                    if(self.txt_new_password.get()!=self.txt_confirm_new_password.get()):
+                        messagebox.showerror("Error","Password and confirm password must be same",parent=self.root)
+                    else:
+                        cur.execute("UPDATE customer SET Password=? WHERE Email=?",
+                                    (self.txt_new_password.get(),
+                                     self.txt_email.get(),
+                                    )
+                                   )
+                        con.commit()
+                        con.close()
+                        messagebox.showinfo("Confirmation","Changed password successfully",parent=self.root)
+                        root.destroy()
             except Exception as es:
                 messagebox.showerror("Error",f"Error due to: {str(es)}",parent=self.root)
     
     # Function to reset boxes
     def reset(self):
-        self.txt_new_pass.delete(0,END)
-        self.txt_answer.delete(0,END)
+        self.txt_new_password.delete(0,END)
+        self.txt_confirm_new_password.delete(0,END)
         self.pass_var.set("")
-        self.email_var.set("")   
         self.txt_email.delete(0,END)
         
     # Create login with database
@@ -204,24 +211,29 @@ class Customer_Login:
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
             try:
-                con=pymysql.connect(host="localhost",user="root",password="",database="employee")
+                con=sqlite3.connect("E:\Thesis\house\database\house.db")
                 cur=con.cursor()
-                cur.execute("select * from employee where email=%s and password=%s",(self.email_var.get(),self.pass_var.get()))
+                cur.execute("SELECT * FROM customer WHERE Email=? and Password=?",
+                                (self.email_var.get(),
+                                 self.pass_var.get(),    
+                                )
+                           )
                 # Store the terminal output to a variable 
                 row=cur.fetchone()
-                if row==None:
-                    messagebox.showerror("Error","Invalid USERNAME or PASSWORD. Try again!",parent=self.root)
+                if(row==None):
+                    messagebox.showerror("Error","Invalid email or/and password. Try again!",parent=self.root)
                     self.reset()
                 else:
-                    messagebox.showinfo("Success","Wellcome",parent=self.root)
+                    messagebox.showinfo("Success","Login Successfully",parent=self.root)
                     con.close()
-                    self.root.destroy()
                     # import file database management
-                    import customer
+                    self.new_window=Toplevel(self.root)
+                    self.new_window.wm_attributes("-topmost", 1)
+                    self.app=HotelManagementSystem(self.new_window)
             except Exception as es:
                 messagebox.showerror("Error",f"Error due to: {str(es)}",parent=self.root)
-
-          
-root=Tk()
-obj=Customer_Login(root)
-root.mainloop()
+                
+if __name__ == "__main__":
+    root=Tk()
+    obj=Customer_Login(root)
+    root.mainloop()          

@@ -1,3 +1,4 @@
+from distutils.command.config import config
 from tkinter import *
 from PIL import Image, ImageTk
 from customer import Cust_Win
@@ -68,7 +69,7 @@ class HotelManagementSystem:
         report_btn=Button(main_frame,text="APARTMENTS",command=self.apartment_availability,font=("times new roman",10,"bold"),bg="black",fg="gold",bd=4,cursor="hand2")
         report_btn.place(x=0,y=120,width=150)
 
-        logout_btn=Button(main_frame,text="LOGOUT",command=self.login,font=("times new roman",10,"bold"),bg="black",fg="gold",bd=4,cursor="hand2")
+        logout_btn=Button(main_frame,text="LOGOUT",command=self.log_out,font=("times new roman",10,"bold"),bg="black",fg="gold",bd=4,cursor="hand2")
         logout_btn.place(x=0,y=150,width=150)
 
         #--------------------Right side image-----------------------#
@@ -96,22 +97,28 @@ class HotelManagementSystem:
 
     def customer_list(self):
         self.new_window=Toplevel(self.root)
+        self.new_window.wm_attributes("-topmost", 1)
         self.app=Cust_Win(self.new_window)
+        
     
     def customer_order(self):
         self.new_window=Toplevel(self.root)
+        self.new_window.wm_attributes("-topmost", 1)
         self.app=Room_Booking(self.new_window)
         
     def customer_approval(self):
         self.new_window=Toplevel(self.root)
+        self.new_window.wm_attributes("-topmost", 1)
         self.app=Room_Approval(self.new_window)
     
     def apartment_availability(self):
         self.new_window=Toplevel(self.root)
-        self.app= Apartment_Availability(self.new_window)
+        self.new_window.wm_attributes("-topmost", 1)
+        self.app=Apartment_Availability(self.new_window)
     
-    def login(self):
-        root.destroy()
+    def log_out(self):
+        self.root.destroy()
+        
            
 if __name__ == "__main__":
     root=Tk()
