@@ -10,6 +10,7 @@ import pymysql
 from tkinter import messagebox, ttk
 from admin_UI import HouseManagementSystem
 from register import User_Register
+import os.path
 
 class Customer_Login:
     def __init__(self,root):
@@ -45,7 +46,7 @@ class Customer_Login:
         #-----------Entry boxes---------#
         title=Label(login_frame,text="LOGIN HERE",font=("times new roman",30,"bold"),bg="black",fg="#08A3D2").place(x=0,y=0)
         self.email_var=StringVar()
-        email=Label(login_frame,text="EMAIL ADDRESS",font=("times new roman",18,"bold"),bg="black",fg="lightgray").place(x=0,y=90)
+        email=Label(login_frame,text="EMAIL",font=("times new roman",18,"bold"),bg="black",fg="lightgray").place(x=0,y=90)
         txt_email=Entry(login_frame,textvariable=self.email_var,font=("times new roman",15),bg="lightgray")
         txt_email.place(x=0,y=130,width=290,height=35)
 
@@ -119,7 +120,7 @@ class Customer_Login:
         #time format --- Date day/month/year \n hour:min:sec 
         time_string=strftime('%H:%M') 
         self.digi_lbl=Label(self.root,font=("times new roman",18,"bold"),bg="black",fg="#12ff05")
-        self.digi_lbl.place(x=-60,y=20,height=20,width=220)
+        self.digi_lbl.grid(row=0,column=0,sticky=W,padx=20,pady=(10,0))
         self.digi_lbl.config(text=time_string)
         # time delay of 1000 milliseconds 
         self.after_clock=root.after(1000,self.digital_clock) #----Global root----#
@@ -127,8 +128,8 @@ class Customer_Login:
     def digital_date(self):   
         #time format --- Date day/month/year \n hour:min:sec 
         self.date_string=strftime('%A %d/%m/%Y') 
-        self.date_lbl=Label(self.root,font=("times new roman",16,"bold"),bg="black",fg="#12ff05")
-        self.date_lbl.place(x=15,y=50,height=30,width=220)
+        self.date_lbl=Label(self.root,font=("times new roman",18,"bold"),bg="black",fg="#12ff05")
+        self.date_lbl.grid(row=1,column=0,sticky=W,padx=20)
         self.date_lbl.config(text=self.date_string)
         self.after_date=root.after(1000,self.digital_date)  #----Global root----#
         
@@ -226,6 +227,11 @@ class Customer_Login:
                 else:
                     messagebox.showinfo("Success","Login Successfully",parent=self.root)
                     con.close()
+                    # Create a temporarily file to save username
+                    folder=os.path.join('E:/Thesis/house/', "temp_username.txt")
+                    file=open(folder,"w")
+                    file.write(str(self.email_var.get()))
+                    file.close()
                     # import file database management
                     self.new_window=Toplevel(self.root)
                     self.new_window.wm_attributes("-topmost", 1)

@@ -29,7 +29,7 @@ class Cust_Win:
         main_frame=Frame(self.root,bg="white",bd=1,relief=RIDGE)
         main_frame.place(x=0,y=0,width=810,height=30)
         
-        text=Label(main_frame,text="Add Customer Details",font=("times new roman",15,"bold"),bg="black",fg="gold")
+        text=Label(main_frame,text="Customer Management",font=("times new roman",15,"bold"),bg="black",fg="gold")
         text.place(x=-1,y=-2,height=30,width=781)
         
         btn=Button(main_frame,text="X",bg="red",command=self.root.destroy)
@@ -71,7 +71,7 @@ class Cust_Win:
         combo_gender["value"]=("Male","Female","Other")
         combo_gender.grid(row=2,column=1)
 
-        lbl_martial=Label(labelframeleft,text="Martial Status",font=("times new roman",12),padx=2,pady=5)
+        lbl_martial=Label(labelframeleft,text="Maritial Status",font=("times new roman",12),padx=2,pady=5)
         lbl_martial.grid(row=3,column=0,sticky=W)
         combo_martial=ttk.Combobox(labelframeleft,textvariable=self.var_martial,font=("times new roman",12),width=20,state="readonly")
         combo_martial["value"]=("Single","Cohabitation","Maried","Widow","Divorced","Living apart","Engaged")
@@ -512,67 +512,116 @@ class Cust_Win:
         self.var_txt.set("")
     
     #----Insert data from entry boxes to SQL----#    
-    def sql_insert_data(self): 
-        try:
-            conn = sqlite3.connect("E:\Thesis\house\database\house.db")
-            my_cursor=conn.cursor()
-            my_cursor.execute("INSERT INTO customer(Firstname,Lastname,Gender,Martial_Status,Nationality,Security_ID,Email,Phone,City,Postcode,Address,Password) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
-                (self.var_firstname.get(),
-                 self.var_lastname.get(),
-                 self.var_gender.get(),
-                 self.var_martial.get(),
-                 self.var_nationality.get(),
-                 self.var_id.get(),
-                 self.var_email.get(),
-                 self.var_phone.get(),
-                 self.var_city.get(),
-                 self.var_postcode.get(), 
-                 self.var_address.get(),
-                 self.var_password.get()                            
+    def sql_insert_data(self):
+        conn = sqlite3.connect("E:\Thesis\house\database\house.db")
+        my_cursor=conn.cursor()
+        my_cursor.execute("SELECT * FROM customer WHERE Security_ID=?",(self.var_id.get(),))
+        result=my_cursor.fetchone()
+        if(result!=None):
+            messagebox.showwarning("Warning","Customer with ID=" + str(self.var_id.get()) + " existed\nPlease check again",parent=self.root)
+        else:
+            try:
+                conn = sqlite3.connect("E:\Thesis\house\database\house.db")
+                my_cursor=conn.cursor()
+                my_cursor.execute("INSERT INTO customer(Firstname,Lastname,Gender,Martial_Status,Nationality,Security_ID,Email,Phone,City,Postcode,Address,Password) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (self.var_firstname.get(),
+                    self.var_lastname.get(),
+                    self.var_gender.get(),
+                    self.var_martial.get(),
+                    self.var_nationality.get(),
+                    self.var_id.get(),
+                    self.var_email.get(),
+                    self.var_phone.get(),
+                    self.var_city.get(),
+                    self.var_postcode.get(), 
+                    self.var_address.get(),
+                    self.var_password.get()                            
+                    )
                 )
-            )
-            conn.commit()
-            self.sql_fetch_data()
-            self.clear()
-            conn.close()
-            messagebox.showinfo("Successfully","Customer has been added",parent=self.root)      
-        except Exception as es:
-            messagebox.showerror("Error",f"Something went wrong:{str(es)}",parent=self.root)
-    
+                conn.commit()
+                self.sql_fetch_data()
+                self.clear()
+                conn.close()
+                messagebox.showinfo("Successfully","Customer has been added",parent=self.root)      
+            except Exception as es:
+                messagebox.showerror("Error",f"Something went wrong:{str(es)}",parent=self.root)
+        
     #----Modify data from entry boxes, update to SQL----#
     def sql_update_data(self):
-        try:
-            conn = sqlite3.connect("E:\Thesis\house\database\house.db")
-            my_cursor=conn.cursor()
-            my_cursor.execute("UPDATE customer SET Firstname=?,Lastname=?,Gender=?,Martial_Status=?,Nationality=?,Email=?,Phone=?,City=?,Postcode=?,Address=?,Password=? WHERE Security_ID=?",
-                (self.var_firstname.get(),
-                self.var_lastname.get(),
-                self.var_gender.get(),
-                self.var_martial.get(),
-                self.var_nationality.get(),
-                self.var_email.get(),
-                self.var_phone.get(),
-                self.var_city.get(),
-                self.var_postcode.get(), 
-                self.var_address.get(),
-                self.var_password.get(),
-                self.var_id.get()                           
+        mess=""
+        conn = sqlite3.connect("E:\Thesis\house\database\house.db")
+        my_cursor=conn.cursor()
+        my_cursor.execute("SELECT * FROM customer WHERE Security_ID=?",(self.var_id.get(),))
+        result=my_cursor.fetchone()
+        if(result[0]!=self.var_firstname.get()):
+            text="Firstname has been modified by " + str(self.var_firstname.get()) + "\n\n"
+            mess=mess+text
+        if(result[1]!=self.var_lastname.get()):
+            text="Lastname has been modified by " + str(self.var_lastname.get()) + "\n\n"
+            mess=mess+text        
+        if(result[2]!=self.var_gender.get()):
+            text="Gender has been modified by " + str(self.var_gender.get()) + "\n\n"
+            mess=mess+text
+        if(result[3]!=self.var_martial.get()):
+            text="Maritial Status has been modified by " + str(self.var_martial.get()) + "\n\n"
+            mess=mess+text
+        if(result[4]!=self.var_nationality.get()):
+            text="Nationality has been modified by " + str(self.var_nationality.get()) + "\n\n"
+            mess=mess+text  
+        if(result[5]!=self.var_id.get()):        
+            text="Security ID has been modified by " + str(self.var_id.get()) + "\n\n"
+            mess=mess+text    
+        if(result[6]!=self.var_email.get()):        
+            text="Email has been modified by " + str(self.var_email.get()) + "\n\n"
+            mess=mess+text               
+        if(result[7]!=self.var_phone.get()):        
+            text="Phone has been modified by " + str(self.var_phone.get()) + "\n\n"
+            mess=mess+text   
+        if(result[8]!=self.var_city.get()):        
+            text="City has been modified by " + str(self.var_city.get()) + "\n\n"
+            mess=mess+text           
+        if(result[9]!=self.var_postcode.get()):        
+            text="Postcode has been modified by " + str(self.var_postcode.get()) + "\n\n"
+            mess=mess+text
+        if(result[10]!=self.var_address.get()):        
+            text="Address has been modified by " + str(self.var_address.get()) + "\n\n"
+            mess=mess+text
+        if(result[11]!=self.var_password.get()):        
+            text="Password has been modified by " + str(self.var_password.get()) + "\n\n"
+            mess=mess+text
+        if(mess==""):
+            messagebox.showwarning("Warning","You have not modified anything",parent=self.root)
+        else:                                                                                                                                           
+            try:
+                my_cursor.execute("UPDATE customer SET Firstname=?,Lastname=?,Gender=?,Martial_Status=?,Nationality=?,Email=?,Phone=?,City=?,Postcode=?,Address=?,Password=? WHERE Security_ID=?",
+                    (self.var_firstname.get(),
+                    self.var_lastname.get(),
+                    self.var_gender.get(),
+                    self.var_martial.get(),
+                    self.var_nationality.get(),
+                    self.var_email.get(),
+                    self.var_phone.get(),
+                    self.var_city.get(),
+                    self.var_postcode.get(), 
+                    self.var_address.get(),
+                    self.var_password.get(),
+                    self.var_id.get()                           
+                    )
                 )
-            )
-            conn.commit()
-            self.sql_fetch_data()
-            self.clear()        
-            conn.close()
-            messagebox.showinfo("Update","Customer details have been updated",parent=self.root)                       
-        except Exception as es:
-            messagebox.showerror("Error",f"Something went wrong:{str(es)}",parent=self.root) 
+                conn.commit()
+                self.sql_fetch_data()
+                self.clear()        
+                conn.close()
+                messagebox.showinfo("Successfully Updated",str(mess),parent=self.root)                       
+            except Exception as es:
+                messagebox.showerror("Error",f"Something went wrong:{str(es)}",parent=self.root) 
     
     #----Delete data from entry boxes, update to SQL---#
     def sql_delete_data(self):
         if(self.var_firstname=="" or self.var_firstname.get()=="" or self.var_lastname.get()=="" or self.var_firstname.get()=="" or self.var_gender.get()=="" or self.var_nationality.get()=="" or self.var_email.get()=="" or self.var_phone.get()=="" or self.var_id.get()=="" or self.var_city.get()=="" or self.var_postcode.get()=="" or self.var_address.get()=="" or self.var_password.get()==""):
-            messagebox.showwarning("House Management System","Please choose a row to delete",parent=self.root)
+            messagebox.showwarning("Warning","Please choose a row to delete",parent=self.root)
         else:
-            mess_delete=messagebox.askyesno("House Management System","Are you sure to delete this customer?",parent=self.root)
+            mess_delete=messagebox.askyesno("Warning","Are you sure to delete this customer?",parent=self.root)
             if(mess_delete==1):
                 x=self.cust_details_table.selection()       
                 #------------Create List to delete--------#

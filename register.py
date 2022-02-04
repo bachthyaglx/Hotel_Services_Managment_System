@@ -57,7 +57,7 @@ class User_Register:
         txt_gender.place(x=50,y=140,width=250)
         
         self.var_maritial=StringVar()
-        maritial=Label(frame1,text="Martial Status",font=("time new roman",12,"bold"),fg="white",bg="black").place(x=370,y=110)
+        maritial=Label(frame1,text="Maritial Status",font=("time new roman",12,"bold"),fg="white",bg="black").place(x=370,y=110)
         txt_maritial=ttk.Combobox(frame1,font=("times new roman",12),textvariable=self.var_maritial,state='readonly',justify=CENTER)
         txt_maritial["value"]=("Single","Cohabitation","Maried","Widow","Divorced","Living apart","Engaged")
         txt_maritial.place(x=370,y=140,width=250)
